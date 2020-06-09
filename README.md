@@ -3,7 +3,7 @@
 Extension shows likes, dislikes, ratio(likes/dislikes) in front page and makes available sorting by them. For example, you can sort medium questions with tag "dynamic-programming".
 
 <p align="center">
-    ![Alt Text](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)    
+    ![](assets/about.gif)    
 </p>
 
 
