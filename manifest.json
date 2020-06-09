@@ -1,18 +1,32 @@
 {
     "manifest_version": 2,
-    "name": "leetcode_beautify",
-    "version": "1.0.0",
+    "name": "leetcoder",
+    "version": "1.0.3",
+    "background": {
+        "scripts": ["./src/background.js"],
+        "persistent": false 
+    },
     "content_scripts":[
         {   
             "matches": [
                 "https://leetcode.com/problemset/*"
             ],
             "js": [
-                "content.js"
+                "./src/content.js"
             ],
             "styles":[
-                "style.css"
+                "./src/style.css"
             ]
         }
-    ]
+    ],
+    "permissions":[
+        "tabs"
+    ],
+    "icons": {
+        "16": "./assets/defaultIcon.png"
+    },
+    "browser_action": {
+        "default_popup": "./src/popup.html",
+        "default_title": "leetcoder"
+    }
 }
