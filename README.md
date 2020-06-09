@@ -12,9 +12,11 @@ Extension shows likes, dislikes, ratio(likes/dislikes) in front page and makes a
 ##### Chrome web store:
 Go [here](https://chrome.google.com/webstore/detail/leetcodeextension/cjhcgcdnofphbmnofhdalemnpddbfphk) and click download.
 ##### From source:
-#
     1.git clone --recursive https://github.com/yerlantemir/leetcoder
     2.Go to "chrome://extensions", load-unpacked and select installed repository
+
+## How it works
+Go to https://leetcode.com/problemset/all/ and wait about 10 seconds until it's loaded.
 ## Development
 
 Want to contribute? Great!
