@@ -29,7 +29,7 @@ Want to contribute? Great!
 
 ## Todos
 
- - Write tests with python + selenium.
+ - Write tests with python + selenium or cypressjs.
  - Find a way to divide a logic of popup window and content script.
  - Add radio buttons to popup window for dynamically turning on/off additional columns.
 

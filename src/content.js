@@ -7,27 +7,9 @@
 /* eslint-disable no-restricted-syntax */
 // eslint-disable-next-line no-use-before-define
 
-// TODO:
 
-const query = 'query{'
-    + 'allQuestions{'
-    + 'likes, '
-    + 'title  '
-    + 'dislikes '
-    + 'solution{ '
-      + 'id '
-    + '}'
-    + 'questionFrontendId '
-    + 'difficulty '
-    + 'stats '
-    + 'categoryTitle '
-    + 'topicTags{ '
-        + 'name '
-    + '}'
-+ '}'
-+ '}';
 
-const allData = [];
+let allData = [];
 let sortedAllData = [];
 let lastSortedAttr;
 let ascending = true;
@@ -37,16 +19,6 @@ let difficultyTag = '';
 let drawnFirstTime = false;
 const difficultyTags = ['Easy', 'Medium', 'Hard'];
 const notFilterTags = ['Top 100 Liked Questions', 'Top Interview Questions', 'Favorite', 'Todo', 'Solved', 'Attempted'];
-
-const getAllQuestions = () => fetch('https://leetcode.com/graphql', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
-  },
-  body: JSON.stringify({ query }),
-})
-  .then((r) => r.json());
 
 
 const getSortedByAttr = (data, attr) => new Promise((resolve) => {
@@ -447,41 +419,6 @@ const drawLikesDislikesRatio = () => {
   });
 };
 
-// Why returning promise? After filling AllData, need to fill all questions in current page,
-// all questions are filled from AllData
-const fillAllData = () => new Promise((resolve) => {
-  getAllQuestions().then((data) => {
-    data.data.allQuestions.forEach((elem) => {
-      const {
-        questionFrontendId, likes, dislikes, title, solution, stats, difficulty, topicTags,
-      } = elem;
-
-      const tagNames = [];
-      topicTags.forEach((topicTag) => {
-        tagNames.push(topicTag.name);
-      });
-      // acceptance rate is given with %, ex: 45.3%
-      const acceptanceRate = JSON.parse(stats).acRate.replace('%', '');
-      // if dislikes = 0, ratio will be = likes, because n/0 = infinity
-      const likesDislikesRatio = dislikes ? (parseInt(likes, 10) / parseInt(dislikes, 10)).toFixed(2) : likes;
-
-      const allValues = {
-        likes,
-        dislikes,
-        ratio: likesDislikesRatio,
-        title,
-        solution,
-        acceptanceRate,
-        difficulty,
-        tagNames,
-      };
-      allData[questionFrontendId] = allValues;
-      allValues.questionFrontendId = questionFrontendId;
-      sortedAllData.push(questionFrontendId);
-    });
-    resolve({});
-  });
-});
 
 
 const tableInPage = (questionsTable) => (typeof (questionsTable) !== 'undefined' && questionsTable != null);
@@ -493,31 +430,19 @@ const setOnClickHandlerPaginationButtons = () => {
   });
 };
 
-const updateExtensionIcon = (values) => {
-  const { value } = values;
-  const { rotatePosition } = values;
-  chrome.runtime.sendMessage({
-    action: 'updateIcon',
-    value,
-    rotatePosition,
+const getAllData = () => {
+  return new Promise((resolve)=> {
+    chrome.storage.local.get(["allData", "sortedAllData"], (values) => { 
+      allData = values['allData'];
+      delete allData[0];
+      sortedAllData = values['sortedAllData'];
+      resolve({});
+    })
   });
 };
-
 const main = () => {
   // eslint-disable-next-line no-use-before-define
   const jsInitTableTimer = setInterval(checkForTableRender, 222);
-  const jsInitIconTimer = setInterval(checkForIconChange, 111);
-
-
-  var rotatePosition = 1;
-  function checkForIconChange() {
-    updateExtensionIcon({
-      value: 'rotate',
-      rotatePosition,
-    });
-    rotatePosition %= 4;
-    rotatePosition += 1;
-  }
 
   function checkForTableRender() {
     getQuestionsTable().then((questionsTable) => {
@@ -533,11 +458,10 @@ const main = () => {
         });
         clearInterval(jsInitTableTimer);
 
-        fillAllData().then(() => {
+        getAllData().then(() => {
           drawLikesDislikesRatio();
           drawnFirstTime = true;
-          clearInterval(jsInitIconTimer);
-          updateExtensionIcon({ value: 'ready' });
+          
         });
 
         setOnClickHandlerPaginationButtons();

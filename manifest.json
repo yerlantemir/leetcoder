@@ -3,7 +3,8 @@
     "name": "leetcoder",
     "version": "1.0.3",
     "background": {
-        "scripts": ["./src/background.js"],
+        "scripts": ["./src/background.js"
+                    ],
         "persistent": false 
     },
     "content_scripts":[
@@ -20,7 +21,8 @@
         }
     ],
     "permissions":[
-        "tabs"
+        "tabs",
+        "storage"
     ],
     "icons": {
         "16": "./assets/defaultIcon.png"
