@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "leetcoder",
-    "version": "1.0.4",
+    "version": "1.0.7",
     "background": {
         "scripts": ["./src/background.js"
                     ],
